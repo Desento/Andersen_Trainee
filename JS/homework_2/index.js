@@ -18,6 +18,7 @@ const correctInterval = (start, end) => {
     if (start > end) {
         return [end, start];
     }
+
     return [start, end];
 }
 
@@ -30,7 +31,7 @@ function selectFromInterval(arr, first, second) {
         throw new Error('Ошибка!');
     }
 
-    let [start, end] = correctInterval(first, second);
+    const [start, end] = correctInterval(first, second);
 
     const filteredArray = arr.filter((item) => item >= start && item <= end);
 
@@ -46,6 +47,7 @@ myIterable[Symbol.iterator] = function () {
     if (!Number.isInteger(this.from) || !Number.isInteger(this.to) || this.from > this.to) {
         throw new Error("Ошибка!");
     }
+
     return {
         current: this.from,
         last: this.to,
@@ -53,9 +55,9 @@ myIterable[Symbol.iterator] = function () {
         next() {
             if (this.current <= this.last) {
                 return { done: false, value: this.current++ };
-            } else {
-                return { done: true };
             }
+
+            return { done: true };
         },
     };
 };

@@ -1,5 +1,4 @@
 Array.prototype.myFilter = function (callback, thisArg) {
-
     if (typeof callback !== "function") {
         throw new Error("Callback is not a function");
     }
@@ -8,9 +7,7 @@ Array.prototype.myFilter = function (callback, thisArg) {
     const result = [];
 
     for (let i = 0; i < objectFromArray.length; i++) {
-
         if (i in objectFromArray) {
-
             if (callback.call(thisArg, objectFromArray[i], i, objectFromArray)) {
                 result.push(objectFromArray[i]);
             }
