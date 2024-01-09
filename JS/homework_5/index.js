@@ -1,11 +1,19 @@
+class StackNode {
+    constructor(data, next = null) {
+        this.data = data;
+        this.next = next;
+    }
+}
+
 class Stack {
     constructor(size = 10) {
         if (!this.isValidSize(size)) {
             throw new Error('Invalid max size');
         }
 
-        this.size = size;
-        this.elements = [];
+        this.maxSize = size;
+        this.count = 0;
+        this.topNode = null;
     }
 
     isValidSize(size) {
@@ -13,7 +21,7 @@ class Stack {
     }
 
     isFull() {
-        return this.elements.length >= this.size;
+        return this.count >= this.maxSize;
     }
 
     push(elem) {
@@ -21,7 +29,10 @@ class Stack {
             throw new Error('Stack overflow');
         }
 
-        this.elements[this.elements.length] = elem;
+        const newNode = new StackNode(elem, this.topNode);
+
+        this.topNode = newNode;
+        this.count++;
     }
 
     pop() {
@@ -29,22 +40,32 @@ class Stack {
             throw new Error('Stack is empty');
         }
 
-        const lastElement = this.elements[this.elements.length - 1];
+        const removedNode = this.topNode;
 
-        this.elements.length = this.elements.length - 1;
-        return lastElement;
+        this.topNode = removedNode.next;
+        this.count--;
+
+        return removedNode.data;
     }
 
     peek() {
-        return this.isEmpty() ? null : this.elements[this.elements.length - 1];
+        return this.isEmpty() ? null : this.topNode.data;
     }
 
     isEmpty() {
-        return this.elements.length === 0;
+        return this.count === 0;
     }
 
     toArray() {
-        return [...this.elements];
+        const result = [];
+        let current = this.topNode;
+
+        while (current) {
+            result.push(current.data);
+            current = current.next;
+        }
+
+        return result;
     }
 
     static fromIterable(iterable) {
@@ -52,10 +73,11 @@ class Stack {
             throw new Error('Not an iterable');
         }
 
+        const iterator = iterable[Symbol.iterator]();
         const stack = new Stack(iterable.length);
 
-        for (const elem of iterable) {
-            stack.push(elem);
+        for (let i = 0; i < iterable.length; i++) {
+            stack.push(iterator.next().value);
         }
 
         return stack;
